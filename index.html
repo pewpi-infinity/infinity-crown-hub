@@ -1,199 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Infinity Crown Hub - Progress Dashboard</title>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Infinity Crown Hub</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a1a;color:#e0e0e0;font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
-.header{background:linear-gradient(135deg,#1a1a3e,#2d1b69);padding:2rem;text-align:center;border-bottom:2px solid rgba(139,92,246,.3)}
-.header h1{font-size:2.5rem;background:linear-gradient(90deg,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header p{opacity:.7;margin-top:.5rem}
-.container{max-width:1200px;margin:0 auto;padding:2rem}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:2rem 0}
-.stat-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;text-align:center}
-.stat-card .number{font-size:2.5rem;font-weight:bold;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stat-card .label{opacity:.6;margin-top:.5rem;font-size:.9rem}
-.section{margin:2rem 0}
-.section h2{color:#a78bfa;margin-bottom:1rem;font-size:1.5rem}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
-.cat-card{background:rgba(255,255,255,.03);border:2px solid;border-radius:10px;padding:1.2rem;text-align:center}
-.cat-icon{font-size:1.2rem;font-weight:bold;margin-bottom:.5rem}
-.cat-count{font-size:2rem;font-weight:bold}
-.cat-label{opacity:.5;font-size:.8rem}
-.progress-bar{background:rgba(255,255,255,.1);border-radius:20px;height:30px;overflow:hidden;margin:1rem 0}
-.progress-fill{height:100%;background:linear-gradient(90deg,#a78bfa,#60a5fa);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:bold;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-.links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.5rem 0}
-.link-card{display:block;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:1.2rem;text-decoration:none;color:inherit;transition:all .3s}
-.link-card:hover{border-color:#a78bfa;transform:translateY(-3px);box-shadow:0 8px 24px rgba(139,92,246,.2)}
-.link-card h3{color:#a78bfa;margin-bottom:.5rem}
-.link-card p{opacity:.6;font-size:.85rem}
-.sync-status{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:1rem;margin:1rem 0;display:flex;align-items:center;gap:1rem}
-.sync-dot{width:12px;height:12px;background:#10b981;border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.activity-feed{max-height:400px;overflow-y:auto}
-.activity-item{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:1rem;align-items:center}
-.activity-item:hover{background:rgba(255,255,255,.02)}
-.activity-time{opacity:.4;font-size:.8rem;white-space:nowrap}
-.builder-section{background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);border-radius:12px;padding:1.5rem;margin:2rem 0}
-.builder-section h3{color:#a78bfa;margin-bottom:1rem}
-.btn{display:inline-block;padding:.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:bold;margin:.3rem;transition:all .3s}
-.btn-primary{background:#a78bfa;color:#fff}.btn-primary:hover{background:#8b5cf6}
-.btn-secondary{background:rgba(255,255,255,.1);color:#e0e0e0;border:1px solid rgba(255,255,255,.2)}.btn-secondary:hover{background:rgba(255,255,255,.15)}
-footer{text-align:center;padding:2rem;opacity:.4;border-top:1px solid rgba(255,255,255,.1)}
-</style>
-</head>
-<body>
-<div class="header">
-  <h1>Crown Hub Progress</h1>
-  <p>Infinity Ecosystem Dashboard &mdash; Real-time progress tracking</p>
-</div>
-
-<div class="container">
-  <div class="sync-status">
-    <div class="sync-dot"></div>
-    <div>
-      <strong>Auto-Sync Active</strong>
-      <span style="opacity:.6;margin-left:1rem" id="lastSync">Loading...</span>
-    </div>
-  </div>
-
-  <div class="stats-row">
-    <div class="stat-card"><div class="number">958</div><div class="label">Total Repos</div></div>
-    <div class="stat-card"><div class="number">865</div><div class="label">Pages Enabled</div></div>
-    <div class="stat-card"><div class="number">6</div><div class="label">Categories</div></div>
-    <div class="stat-card"><div class="number" id="linkedCount">0</div><div class="label">Cross-Linked</div></div>
-  </div>
-
-  <div class="section">
-    <h2>Pages Coverage</h2>
-    <div class="progress-bar">
-      <div class="progress-fill" style="width:90%">90% (865/958)</div>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Categories</h2>
-    <div class="cat-grid">
-        <div class="cat-card" style="border-color:#10b981">
-          <div class="cat-icon" style="color:#10b981">Engineer</div>
-          <div class="cat-count">146</div>
-          <div class="cat-label">repos</div>
-        </div>
-        <div class="cat-card" style="border-color:#f59e0b">
-          <div class="cat-icon" style="color:#f59e0b">CEO</div>
-          <div class="cat-count">23</div>
-          <div class="cat-label">repos</div>
-        </div>
-        <div class="cat-card" style="border-color:#3b82f6">
-          <div class="cat-icon" style="color:#3b82f6">Import</div>
-          <div class="cat-count">3</div>
-          <div class="cat-label">repos</div>
-        </div>
-        <div class="cat-card" style="border-color:#ec4899">
-          <div class="cat-icon" style="color:#ec4899">Investigate</div>
-          <div class="cat-count">193</div>
-          <div class="cat-label">repos</div>
-        </div>
-        <div class="cat-card" style="border-color:#8b5cf6">
-          <div class="cat-icon" style="color:#8b5cf6">Routes</div>
-          <div class="cat-count">19</div>
-          <div class="cat-label">repos</div>
-        </div>
-        <div class="cat-card" style="border-color:#6b7280">
-          <div class="cat-icon" style="color:#6b7280">Data</div>
-          <div class="cat-count">574</div>
-          <div class="cat-label">repos</div>
-        </div></div>
-  </div>
-
-  <div class="builder-section">
-    <h3>Ecosystem Builder</h3>
-    <p style="opacity:.7;margin-bottom:1rem">Quick actions for managing the ecosystem</p>
-    <a class="btn btn-primary" href="https://pewpi-infinity.github.io/infinity-crown-index/" target="_blank">Crown Index</a>
-    <a class="btn btn-primary" href="https://pewpi-infinity.github.io/infinity-spark-market/" target="_blank">Spark Market</a>
-    <a class="btn btn-secondary" href="https://pewpi-infinity.github.io/smug_look/" target="_blank">Octave Hub</a>
-    <a class="btn btn-secondary" href="https://pewpi-infinity.github.io/mongoose.os/" target="_blank">Mongoose.OS</a>
-    <a class="btn btn-secondary" href="https://pewpi-infinity.github.io/repo-dashboard-hub/" target="_blank">Dashboard</a>
-    <a class="btn btn-secondary" href="https://pewpi-infinity.github.io/banksy/" target="_blank">Banksy</a>
-    <a class="btn btn-secondary" href="https://pewpi-infinity.github.io/MARIO-TOKENS/" target="_blank">Mario Tokens</a>
-  </div>
-
-  <div class="section">
-    <h2>Ecosystem Links</h2>
-    <div class="links-grid">
-      <a class="link-card" href="https://pewpi-infinity.github.io/infinity-crown-index/" target="_blank">
-        <h3>Crown Index</h3>
-        <p>Master repo index with emoji builder, search, and category management</p>
-      </a>
-      <a class="link-card" href="https://pewpi-infinity.github.io/infinity-spark-hub/" target="_blank">
-        <h3>Spark Hub</h3>
-        <p>Central spark repo coordinator</p>
-      </a>
-      <a class="link-card" href="https://pewpi-infinity.github.io/infinity-master-hub/" target="_blank">
-        <h3>Master Hub</h3>
-        <p>Legacy hub with all page links</p>
-      </a>
-      <a class="link-card" href="https://pewpi-infinity.github.io/mongoose.os/" target="_blank">
-        <h3>Mongoose.OS</h3>
-        <p>Research hub with carts, tokens, and firmware</p>
-      </a>
-      <a class="link-card" href="https://github.com/pewpi-infinity" target="_blank">
-        <h3>GitHub Profile</h3>
-        <p>All 958 repositories</p>
-      </a>
-      <a class="link-card" href="https://pewpi-infinity.github.io/infinity-spark-market/" target="_blank">
-        <h3>Spark Market</h3>
-        <p>Token marketplace and trading</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2>Recent Activity</h2>
-    <div class="activity-feed" id="activityFeed">
-      <div class="activity-item"><span class="activity-time">Loading...</span><span>Fetching activity data...</span></div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  Infinity Crown Hub &mdash; Contact: 808-342-9975 &middot; marvasweater@gmail.com
-</footer>
-
-<script>
-const USER = "pewpi-infinity";
-const CROWN_INDEX_URL = `https://${USER}.github.io/infinity-crown-index/`;
-
-async function loadCrownData() {
-  try {
-    const r = await fetch(CROWN_INDEX_URL + "data/crown_sites.json", {cache:"no-store"});
-    if (!r.ok) return;
-    const sites = await r.json();
-
-    document.getElementById("linkedCount").textContent = sites.filter(s => s.has_pages).length;
-    document.getElementById("lastSync").textContent = "Last sync: " + (sites[0]?.scanned_at || "unknown");
-
-    // Build activity feed
-    const sorted = [...sites].sort((a,b) => (b.updated_at||"").localeCompare(a.updated_at||""));
-    const feed = document.getElementById("activityFeed");
-    feed.innerHTML = sorted.slice(0, 30).map(s => {
-      const d = s.updated_at ? new Date(s.updated_at).toLocaleDateString() : "";
-      return `<div class="activity-item">
-        <span class="activity-time">${d}</span>
-        <span><a href="${s.url}" target="_blank" style="color:#a78bfa">${s.repo}</a></span>
-        <span style="opacity:.4;margin-left:auto">${s.size}KB</span>
-      </div>`;
-    }).join("");
-  } catch(e) {
-    console.warn("Failed to load crown data:", e);
-  }
+:root {
+  --bg: #0b0f14;
+  --panel: #0f1620;
+  --line: rgba(255,255,255,.1);
+  --text: #e8eef7;
+  --muted: #a9b7c8;
+  --accent: #6366f1;
+  --accent2: #818cf8;
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: radial-gradient(800px 500px at 30% -10%, #312e81, transparent 50%), var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1100px; margin: auto; padding: 16px; }
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(11,15,20,.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+}
+.hdr { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.brand { font-weight: 800; font-size: 1.1rem; white-space: nowrap; }
+.brand-icon { font-size: 1.4rem; }
+.nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.nav a {
+  font-size: 12px; padding: 5px 10px;
+  border: 1px solid var(--line); border-radius: 8px;
+  white-space: nowrap; color: var(--text);
+}
+.nav a:hover { background: rgba(255,255,255,.06); text-decoration: none; }
+.hero {
+  text-align: center; padding: 40px 16px 30px;
+  border-bottom: 1px solid var(--line);
+}
+.hero-icon { font-size: 3.5rem; margin-bottom: 12px; }
+.hero h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+.hero p { color: var(--muted); max-width: 600px; margin: auto; font-size: 14px; }
+.stats { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+.stat {
+  border: 1px solid var(--line); border-radius: 12px;
+  padding: 10px 18px; text-align: center;
+  background: rgba(255,255,255,.03);
+}
+.stat strong { display: block; font-size: 1.3rem; color: var(--accent); }
+.stat span { font-size: 12px; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 20px; }
+.card {
+  border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px; background: rgba(255,255,255,.03);
+  transition: border-color .2s, transform .2s;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.card-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn {
+  font-size: 11px; padding: 4px 10px;
+  border: 1px solid var(--line); border-radius: 8px;
+  color: var(--text); background: transparent;
+  cursor: pointer; text-decoration: none;
+}
+.btn:hover { background: rgba(255,255,255,.06); text-decoration: none; }
+.btn-accent { border-color: var(--accent); color: var(--accent); }
+section { margin-top: 30px; }
+section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.tiny { font-size: 11px; color: var(--muted); }
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 40px; padding: 16px 0;
+  text-align: center; font-size: 12px; color: var(--muted);
+}
+.pulse { animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 6px; }
+.module-list { list-style: none; }
+.module-list li {
+  padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px;
+  margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,.02);
+}
+.module-list li:hover { border-color: var(--accent); }
+.tag { font-size: 10px; padding: 2px 8px; border-radius: 99px; background: var(--accent); color: #fff; font-weight: 600; }
+</style>
+</head><body>
+<header><div class="wrap hdr">
+  <span class="brand"><span class="brand-icon">&#x1F451;</span> Crown Hub</span>
+  
+    <nav class="nav">
+      <a href="https://pewpi-infinity.github.io/infinity-crown-index/">Crown Index</a>
+      <a href="https://pewpi-infinity.github.io/infinity-spark-market/">Market</a>
+      <a href="https://pewpi-infinity.github.io/smug_look/">Octave</a>
+      <a href="https://pewpi-infinity.github.io/MARIO-TOKENS/">Mario</a>
+    </nav>
+</div></header>
 
-loadCrownData();
-</script>
+<div class="hero">
+  <div class="hero-icon">&#x1F451;</div>
+  <h1>Infinity Crown Hub</h1>
+  <p>Infrastructure module for the Infinity ecosystem. Provides crown hub capabilities to all connected nodes and services.</p>
+</div>
 
-<script defer src="https://pewpi-infinity.github.io/infinity-crown-index/js/infinity-emoji-logic.js"></script>
-</body>
-</html>
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><strong>&#x1F451;</strong><span>Module</span></div>
+    <div class="stat"><strong><span class="status-dot pulse"></span>Online</strong><span>Status</span></div>
+    <div class="stat"><strong>90</strong><span>Infra Nodes</span></div>
+    <div class="stat"><strong>Service</strong><span>Role</span></div>
+  </div>
+
+  <section>
+    <h2>&#x1F451; Crown Hub Services</h2>
+    <ul class="module-list">
+      <li><span>Crown Hub Core Engine</span><span class="tag">Online</span></li>
+      <li><span>Crown Hub API Gateway</span><span class="tag">Online</span></li>
+      <li><span>Crown Hub Data Store</span><span class="tag">Ready</span></li>
+      <li><span>Crown Hub Event Bus</span><span class="tag">Standby</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>&#x1F517; Ecosystem Links</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">&#x1F451; Crown Index</div>
+        <div class="card-desc">Central registry for all Infinity modules and services</div>
+        <div class="card-links">
+          <a class="btn btn-accent" href="https://pewpi-infinity.github.io/infinity-crown-index/">Open</a>
+          <a class="btn" href="https://github.com/pewpi-infinity/infinity-crown-hub" target="_blank">Source</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#x1F4CA; Dashboard</div>
+        <div class="card-desc">Monitor all infrastructure modules in real time</div>
+        <div class="card-links">
+          <a class="btn btn-accent" href="https://pewpi-infinity.github.io/repo-dashboard-hub/">View</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer class="wrap">
+  Infinity Ecosystem &middot; Infinity Crown Hub Module<br>
+  Part of the <a href="https://pewpi-infinity.github.io/infinity-crown-index/">Infinity Crown Index</a> network
+</footer>
+</body></html>
